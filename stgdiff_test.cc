@@ -294,6 +294,39 @@ TEST_CASE("short report") {
   }
 }
 
+TEST_CASE("recursive naming") {
+  std::ostringstream os;
+  Runtime runtime(os, false);
+
+  // Read inputs.
+  Graph graph;
+  const Id id0 = Read(runtime, graph, "recursive_naming_0.stg");
+  const Id id1 = Read(runtime, graph, "recursive_naming_1.stg");
+
+  // Compute differences.
+  stg::diff::Outcomes outcomes;
+  const auto comparison =
+      diff::Compare(runtime, {}, graph, id0, id1, outcomes);
+  const bool same = comparison == diff::Comparison{};
+
+  // Write SHORT report.
+  std::ostringstream output;
+  if (!same) {
+    NameCache names;
+    const reporting::Options options{reporting::OutputFormat::SHORT};
+    const reporting::Reporting reporting{graph, outcomes, options, names};
+    Report(reporting, comparison, output);
+  }
+
+  // Check comparison outcome and report output.
+  CHECK(!same);
+  const std::ifstream expected_output_file(
+      filename_to_path("recursive_naming_report"));
+  std::ostringstream expected_output;
+  expected_output << expected_output_file.rdbuf();
+  CHECK(output.str() == expected_output.str());
+}
+
 TEST_CASE("fidelity diff") {
   std::ostringstream os;
   Runtime runtime(os, false);
