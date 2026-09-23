@@ -1,7 +1,7 @@
 1 function symbol(s) added
-  'int fun(struct { # next; int left; int right; #* extra; }, struct { # next; int left; int right; #* extra; }*)'
+  'int fun(struct { #; int left; int right; #* extra; }, #*)'
 
 2 variable symbol(s) added
-  'struct { # next; int left; int right; #* extra; }* a'
+  '#* a'
   '#* z'
 

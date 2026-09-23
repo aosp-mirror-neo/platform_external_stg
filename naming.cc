@@ -20,11 +20,15 @@
 
 #include "naming.h"
 
+#include <cstddef>
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "graph.h"
+#include "scc.h"
 
 namespace stg {
 
@@ -111,14 +115,44 @@ struct DescribeWorker {
       : graph(graph), names(names) {}
 
   Name operator()(Id id) {
-    // infinite recursion prevention - insert at most once
     static const Name black_hole{"#"};
-    auto insertion = names.insert({id, black_hole});
-    Name& cached = insertion.first->second;
-    if (insertion.second) {
-      cached = graph.Apply(*this, id);
+    const auto it = names.find(id);
+    if (it != names.end()) {
+      return it->second;
     }
-    return cached;
+    const auto handle = scc.Open(id);
+    if (!handle) {
+      // a recursive visit, stub out the description
+      return black_hole;
+    }
+
+    const auto name = graph.Apply(*this, id);
+
+    const auto scc_ids = scc.Close(*handle);
+    if (scc_ids.empty()) {
+      // first visit to a non-root node in an SCC, stub out the description
+      return black_hole;
+    }
+    // completed SCC
+    if (scc_ids.size() == 1) {
+      // either a trivial SCC or a self-loop, either way store the description
+      names.emplace(id, name);
+      return name;
+    }
+    // a rare non-trivial SCC, ensure all descriptions are unrolled exactly once
+    for (const auto scc_id : scc_ids) {
+      names.emplace(scc_id, black_hole);
+    }
+    std::vector<Name> scc_names;
+    scc_names.reserve(scc_ids.size());
+    for (const auto scc_id : scc_ids) {
+      scc_names.push_back(graph.Apply(*this, scc_id));
+    }
+    for (size_t ix = 0; ix < scc_ids.size(); ++ix) {
+      using std::swap;
+      swap(names.at(scc_ids[ix]), scc_names[ix]);
+    }
+    return names.at(id);
   }
 
   Name operator()(const Special& x) {
@@ -271,6 +305,7 @@ struct DescribeWorker {
 
   const Graph& graph;
   NameCache& names;
+  SCC<Id> scc;
 };
 
 struct DescribeKindWorker {
