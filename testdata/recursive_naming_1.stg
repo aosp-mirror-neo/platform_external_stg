@@ -1,0 +1,88 @@
+version: 0x00000002
+root_id: 0x84ea5130
+pointer_reference {
+  id: 0x0a9039a7
+  kind: POINTER
+  pointee_type_id: 0x0a9039a7
+}
+pointer_reference {
+  id: 0x0d9741cc
+  kind: POINTER
+  pointee_type_id: 0x1c1de1af
+}
+primitive {
+  id: 0x6720d32f
+  name: "int"
+  encoding: SIGNED_INTEGER
+  bytesize: 0x00000004
+}
+member {
+  id: 0x5051f076
+  name: "extra"
+  type_id: 0x0a9039a7
+  offset: 128
+}
+member {
+  id: 0x359e4c97
+  name: "left"
+  type_id: 0x6720d32f
+  offset: 64
+}
+member {
+  id: 0x11f300df
+  name: "next"
+  type_id: 0x0d9741cc
+}
+member {
+  id: 0x0b1191cc
+  name: "right"
+  type_id: 0x6720d32f
+  offset: 96
+}
+struct_union {
+  id: 0x1c1de1af
+  kind: STRUCT
+  definition {
+    bytesize: 24
+    member_id: 0x11f300df
+    member_id: 0x359e4c97
+    member_id: 0x0b1191cc
+    member_id: 0x5051f076
+  }
+}
+function {
+  id: 0x9ab1c643
+  return_type_id: 0x6720d32f
+  parameter_id: 0x1c1de1af
+  parameter_id: 0x0d9741cc
+}
+elf_symbol {
+  id: 0xa7b0241d
+  name: "a"
+  is_defined: true
+  symbol_type: OBJECT
+  type_id: 0x0d9741cc
+  full_name: "a"
+}
+elf_symbol {
+  id: 0xc018d523
+  name: "fun"
+  is_defined: true
+  symbol_type: FUNCTION
+  type_id: 0x9ab1c643
+  full_name: "fun"
+}
+elf_symbol {
+  id: 0xf58aebbc
+  name: "z"
+  is_defined: true
+  symbol_type: OBJECT
+  type_id: 0x0a9039a7
+  full_name: "z"
+}
+interface {
+  id: 0x84ea5130
+  symbol_id: 0xa7b0241d
+  symbol_id: 0xc018d523
+  symbol_id: 0xf58aebbc
+}
