@@ -143,6 +143,7 @@ else()
     file_descriptor_test
     filter_test
     hex_test
+    number_test
     order_test
     reporting_test
     runtime_test
