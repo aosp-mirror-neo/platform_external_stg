@@ -32,7 +32,7 @@
 namespace stg {
 
 struct HashValue {
-  constexpr explicit HashValue(uint32_t value) : value(value) {}
+  explicit HashValue(uint32_t value) : value(value) {}
   auto operator<=>(const HashValue&) const = default;
   uint32_t value;
 };
@@ -54,33 +54,33 @@ struct hash<stg::HashValue> {
 namespace stg {
 
 struct Hash {
-  constexpr HashValue operator()(HashValue hash_value) const noexcept {
+  HashValue operator()(HashValue hash_value) const noexcept {
     return hash_value;
   }
 
   // Hash boolean by converting to int.
-  constexpr HashValue operator()(bool x) const noexcept {
+  HashValue operator()(bool x) const noexcept {
     return x ? (*this)(1) : (*this)(0);
   }
 
   // Hash unsigned 64 bits by splitting, hashing and combining.
-  constexpr HashValue operator()(uint64_t x) const noexcept {
+  HashValue operator()(uint64_t x) const noexcept {
     const uint32_t lo = x;
     const uint32_t hi = x >> 32;
     return (*this)(lo, hi);
   }
 
   // Hash signed 64 bits by casting to unsigned 64 bits.
-  constexpr HashValue operator()(int64_t x) const noexcept {
+  HashValue operator()(int64_t x) const noexcept {
     return (*this)(static_cast<uint64_t>(x));
   }
 
-  constexpr HashValue operator()(const Number& x) const {
+  HashValue operator()(const Number& x) const {
     return (*this)(x.HashValue());
   }
 
   // See https://github.com/skeeto/hash-prospector.
-  constexpr HashValue operator()(uint32_t x) const noexcept {
+  HashValue operator()(uint32_t x) const noexcept {
     x ^= x >> 16;
     x *= 0x21f0aaad;
     x ^= x >> 15;
@@ -90,17 +90,17 @@ struct Hash {
   }
 
   // Hash signed 32 bits by casting to unsigned 32 bits.
-  constexpr HashValue operator()(int32_t x) const noexcept {
+  HashValue operator()(int32_t x) const noexcept {
     return (*this)(static_cast<uint32_t>(x));
   }
 
   // Hash 8 bits by zero extending to 32 bits.
-  constexpr HashValue operator()(char x) const noexcept {
+  HashValue operator()(char x) const noexcept {
     return (*this)(static_cast<uint32_t>(static_cast<unsigned char>(x)));
   }
 
   // 32-bit FNV-1a. See https://wikipedia.org/wiki/Fowler-Noll-Vo_hash_function.
-  constexpr HashValue operator()(const std::string_view x) const noexcept {
+  HashValue operator()(const std::string_view x) const noexcept {
     uint32_t h = 0x811c9dc5;
     for (auto ch : x) {
       h ^= static_cast<unsigned char>(ch);
@@ -115,13 +115,13 @@ struct Hash {
   }
 
   // Hash C string by constructing a std::string_view.
-  constexpr HashValue operator()(const char* x) const noexcept {
+  HashValue operator()(const char* x) const noexcept {
     return (*this)(std::string_view(x));
   }
 
   // Reverse order Boost hash_combine (must be used with good hashes).
   template <typename Arg, typename... Args>
-  constexpr HashValue operator()(Arg arg, Args... args) const {
+  HashValue operator()(Arg arg, Args... args) const {
     const uint32_t seed = (*this)(args...).value;
     const uint32_t hash = (*this)(arg).value;
     return HashValue(seed ^ (hash + 0x9e3779b9 + (seed << 6) + (seed >> 2)));

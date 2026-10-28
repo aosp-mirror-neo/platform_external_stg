@@ -41,7 +41,7 @@ namespace {
 // is not a very effective method of mixing hash values if the values are
 // generated with a weak hashing algorithm.
 template <uint8_t decay>
-constexpr HashValue DecayHashCombine(HashValue a, HashValue b) {
+HashValue DecayHashCombine(HashValue a, HashValue b) {
   static_assert(decay > 0 && decay < 32, "decay must lie inside (0, 32)");
   return HashValue(a.value ^ (b.value >> decay));
 }
