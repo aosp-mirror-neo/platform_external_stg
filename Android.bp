@@ -59,8 +59,6 @@ cc_defaults {
             enabled: false,
         },
     },
-    // TODO(b/324274771): figure out a better solution
-    native_coverage: false,
 }
 
 cc_library_host_static {
