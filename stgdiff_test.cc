@@ -22,7 +22,8 @@
 #include <sstream>
 #include <string>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include "comparison.h"
 #include "fidelity.h"
 #include "graph.h"

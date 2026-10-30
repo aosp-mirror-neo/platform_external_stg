@@ -50,7 +50,7 @@ later versions. Minimum requirements for a local build are:
 | native format | libprotobuf-dev   | protobuf-devel    | 3.19      |
 | native format | protobuf-compiler | protobuf-compiler | 3.19      |
 | allocator[^1] | libjemalloc-dev   | jemalloc-devel    | 5         |
-| catch2[^2]    | catch2            | catch2-devel      | 2 (only)  |
+| catch2[^2]    | catch2            | catch2-devel      | 3 (only)  |
 
 [^1]: jemalloc is optional, but will likely improve performance.
 [^2]: catch2 is optional, but required to build the test suite.
