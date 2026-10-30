@@ -22,7 +22,8 @@
 #include <iostream>
 #include <vector>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <libxml/tree.h>
 #include "abigail_reader.h"
 #include "equality.h"
